@@ -1,10 +1,20 @@
 const { kafka } = require("../clients/kafka");
-const { mongo } = require("../clients/mongo");
+const {mongo} = require("../clients/mongo");
+
+let db;
 
 async function init() {
     // Get the database and collection on which to run the operation
-    const database = mongo.db("hobbyInvestor");
-    const companyNewsCollection = database.collection("companyNews");
+    db = await mongo().then(
+        thisDb => {
+            console.log('🎉 connected to database successfully')
+            return thisDb;
+        }
+    ).catch((error) => console.error(error));
+
+    console.log('Connected to DB!');
+
+    const companyNewsCollection = db.collection("companyNews");
 
     const group = "111222333444";
 
